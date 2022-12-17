@@ -2,7 +2,7 @@ import { TaskInterface } from "../create-task";
 
 export const createTaskMarkUp = ({ taskText, status }: TaskInterface, index: number): string => (
   `<tr class="table-light">
-    <td>${index}</td>
+    <td>${index + 1}</td>
     <td class="task">
       ${taskText}
     </td>
