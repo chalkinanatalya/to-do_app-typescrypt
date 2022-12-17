@@ -1,12 +1,12 @@
 import { TaskInterface } from "../create-task";
 
-export const createTaskMarkUp = ({ taskText, status }: TaskInterface, index: number): string => (
+export const createTaskMarkUp = ({ taskText, status }: TaskInterface): string => (
   `<tr class="table-light">
-    <td>${index + 1}</td>
+    <td></td>
     <td class="task">
       ${taskText}
     </td>
-    <td>В ${status}</td>
+    <td>${status}</td>
     <td>
       <button class="btn btn-danger">
         Удалить
