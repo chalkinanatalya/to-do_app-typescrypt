@@ -1,13 +1,13 @@
 import { TaskInterface } from "../create-task";
 
-export const createTaskMarkUp = ({ taskText, status }: TaskInterface): string => (
+export const createTaskMarkUp = ({ id, taskText, status }: TaskInterface): string => (
   `<tr class="table-light">
     <td></td>
     <td class="task">
       ${taskText}
     </td>
     <td>${status}</td>
-    <td>
+    <td id=${id}>
       <button class="btn btn-danger">
         Удалить
       </button>

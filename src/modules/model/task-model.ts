@@ -1,4 +1,3 @@
-import { nanoid } from "../../../node_modules/nanoid/index";
 import { TaskInterface } from "../create-task";
 
 export const getTaskList = (): TaskInterface[] => {
@@ -14,13 +13,23 @@ export const getTaskList = (): TaskInterface[] => {
     return taskList;
 }
 
-export const addTask = (task: TaskInterface): void => {
+export const changeTask = (taskChanger: (taskList: TaskInterface[], task: TaskInterface) => TaskInterface[], task: TaskInterface): void => {
     let taskList = getTaskList();
     const username = sessionStorage.getItem('activeUser');
 
-    taskList.push(task);
+    taskList = taskChanger(taskList, task);
 
     if (typeof username === 'string') {
         localStorage.setItem(username, JSON.stringify(taskList));
     }
+}
+
+export const addTask = (taskList: TaskInterface[], task: TaskInterface): TaskInterface[] => {
+    taskList.push(task);
+    return taskList;
+}
+
+export const removeTask = (taskList: TaskInterface[], task: TaskInterface): TaskInterface[] => {
+    taskList = taskList.filter(element => element.id !== task.id);
+    return taskList;
 }

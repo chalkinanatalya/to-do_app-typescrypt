@@ -1,6 +1,6 @@
 import { nanoid } from "../../../node_modules/nanoid/index";
 import { TaskInterface } from "../create-task";
-import { addTask, getTaskList } from "../model/task-model";
+import { addTask, changeTask, getTaskList, removeTask } from "../model/task-model";
 import { createAppMarkUp } from "../view/app-view";
 import { createTasksMarkUp } from "./task-presenter";
 
@@ -9,16 +9,21 @@ export const renderApp = () => {
     body?.insertAdjacentHTML('beforeend', createAppMarkUp());
 
     renderTasksList(getTaskList());
-    buttonHandler();
+    saveButtonHandler();
+    removeButtonHandler();
 }
 
 export const renderTasksList = (taskList: TaskInterface[]) => {
     const tBody = document.querySelector('tbody') as HTMLTableSectionElement;
     tBody?.insertAdjacentHTML('beforeend', createTasksMarkUp(taskList));
-    //функция перерисовки всех номеров
+    //TODO функция перерисовки всех номеров
 }
 
-const buttonHandler = () => {
+export const removeTableString = (cell: HTMLElement): void => {
+    cell.parentElement?.remove();
+}
+
+const saveButtonHandler = () => {
     const buttonSave = document.querySelector('.btn-primary') as HTMLButtonElement;
 
     buttonSave.addEventListener('click', (e) => {
@@ -31,7 +36,25 @@ const buttonHandler = () => {
             status: 'running',
         }
 
-        addTask(newTask);
+        changeTask(addTask, newTask);
         renderTasksList([newTask]);
     })
+}
+
+const removeButtonHandler = () => {
+    const buttonsRemove = document.querySelectorAll('.btn-danger') as NodeListOf<HTMLButtonElement>;
+    buttonsRemove.forEach(buttonRemove =>
+        buttonRemove.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = e.target as HTMLButtonElement;
+
+            if (target.parentElement) {
+                const removedTask: TaskInterface = {
+                    id: target.parentElement.id,
+                }
+                changeTask(removeTask, removedTask);
+                removeTableString(target.parentElement);
+            }
+        })
+    );
 }
