@@ -33,3 +33,10 @@ export const removeTask = (taskList: TaskInterface[], task: TaskInterface): Task
     taskList = taskList.filter(element => element.id !== task.id);
     return taskList;
 }
+
+export const completeTask = (taskList: TaskInterface[], task: TaskInterface): TaskInterface[] => {
+    const id = taskList.findIndex(element => element.id === task.id);
+    taskList[id].status = task.status;
+
+    return taskList;
+}
