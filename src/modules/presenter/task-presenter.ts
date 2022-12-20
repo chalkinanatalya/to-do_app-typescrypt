@@ -23,13 +23,33 @@ const modifyTableString = (cell: HTMLElement): void => {
     cell.parentElement?.children?.item(1)?.classList.add('text-decoration-line-through');
 }
 
-export const saveButtonHandler = () => {
-    const buttonSave = document.querySelector('.btn-primary') as HTMLButtonElement;
+const checkInput = (buttonSave: HTMLButtonElement, input: HTMLInputElement): void => {
+    if (input.value === '') {
+        buttonSave.disabled = true;
+    } else {
+        buttonSave.disabled = false;
+    }
+}
+
+export const stateHandler = (buttonSave: HTMLButtonElement, input: HTMLInputElement): void => {
+    input.addEventListener('keyup', (e) => {
+        const target = e.target as HTMLInputElement;
+        checkInput(buttonSave, target);
+    })
+}
+
+export const saveButtonHandler = (buttonSave: HTMLButtonElement, input: HTMLInputElement) => {
+    buttonSave.disabled = true;
 
     buttonSave.addEventListener('click', (e) => {
         e.preventDefault();
 
-        const input = document.querySelector('.form-control') as HTMLInputElement;
+        checkInput(buttonSave, input);
+
+        if (buttonSave.disabled) {
+            return;
+        }
+
         const newTask: TaskInterface = {
             id: nanoid(),
             taskText: input.value,
