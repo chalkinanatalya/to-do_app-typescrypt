@@ -1,5 +1,5 @@
 export const createAppMarkUp = (): string => (
-    `<div class="app-container vh-100 w-100 d-flex align-items-center justify-content-center flex-column">
+  `<div class="app-container vh-100 w-100 d-flex align-items-center justify-content-center flex-column">
 
     <h3>Todo App</h3>
     <form class="d-flex align-items-center mb-3">
@@ -7,7 +7,7 @@ export const createAppMarkUp = (): string => (
         <input type="text" class="form-control" placeholder="ввести задачу">
       </label>
 
-      <button type="submit" class="btn btn-primary me-3">
+      <button type="submit" class="btn btn-primary me-3 btn-save">
         Сохранить
       </button>
 

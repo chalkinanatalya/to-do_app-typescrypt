@@ -1,13 +1,9 @@
 import './index.html';
-import { mock } from './modules/mock';
 import { renderApp } from './modules/presenter/app-presenter';
+import { renderAuth } from './modules/presenter/auth-presenter';
 
-const setStorage = (): void => {
-    // localStorage.setItem('user', JSON.stringify(mock));
-    sessionStorage.setItem('activeUser', 'user');
+if (sessionStorage.getItem('activeUser')) {
+    renderApp();
+} else {
+    renderAuth();
 }
-
-
-setStorage();
-
-renderApp();

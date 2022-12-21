@@ -2,7 +2,7 @@ import { nanoid } from "../../../node_modules/nanoid/index";
 import { TaskInterface } from "../create-task";
 import { addTask, changeTask, completeTask, removeTask } from "../model/task-model";
 import { createTaskMarkUp } from "../view/task-view";
-import { renderTasksList } from "./app-presenter";
+import { renderTasksList, updateNumeration } from './app-presenter';
 
 export const createTasksMarkUp = (tasks: TaskInterface[]): string => {
     let taskTemplate: string = '';
@@ -23,7 +23,7 @@ const modifyTableString = (cell: HTMLElement): void => {
     cell.parentElement?.children?.item(1)?.classList.add('text-decoration-line-through');
 }
 
-const checkInput = (buttonSave: HTMLButtonElement, input: HTMLInputElement): void => {
+export const checkInput = (buttonSave: HTMLButtonElement, input: HTMLInputElement): void => {
     if (input.value === '') {
         buttonSave.disabled = true;
     } else {
@@ -45,7 +45,6 @@ export const saveButtonHandler = (buttonSave: HTMLButtonElement, input: HTMLInpu
         e.preventDefault();
 
         checkInput(buttonSave, input);
-
         if (buttonSave.disabled) {
             return;
         }
@@ -53,11 +52,15 @@ export const saveButtonHandler = (buttonSave: HTMLButtonElement, input: HTMLInpu
         const newTask: TaskInterface = {
             id: nanoid(),
             taskText: input.value,
-            status: 'running',
+            status: 'В процессе',
         }
 
         changeTask(addTask, newTask);
         renderTasksList([newTask]);
+        input.value = '';
+        buttonSave.disabled = true;
+        removeButtonHandler();
+        completeButtonHandler();
     })
 }
 
@@ -74,6 +77,7 @@ export const removeButtonHandler = () => {
                 }
                 changeTask(removeTask, removedTask);
                 removeTableString(target.parentElement);
+                updateNumeration();
             }
         })
     );
@@ -89,10 +93,12 @@ export const completeButtonHandler = () => {
             if (target.parentElement) {
                 const completedTask: TaskInterface = {
                     id: target.parentElement.id,
-                    status: 'completed'
+                    status: 'Завершён'
                 }
                 changeTask(completeTask, completedTask);
                 modifyTableString(target.parentElement);
+                let tr = document.querySelector(`#${target.parentElement.id}`)?.parentElement;
+                tr!.children[2].textContent = 'Завершён';
             }
         })
     );

@@ -11,6 +11,7 @@ export const renderApp = () => {
 
     renderTasksList(getTaskList());
     evokeHandler();
+    const buttonsRemove = document.querySelectorAll('.btn-danger') as NodeListOf<HTMLButtonElement>;
     removeButtonHandler();
     completeButtonHandler();
 }
@@ -20,22 +21,17 @@ export const renderTasksList = (taskList: TaskInterface[]) => {
     tBody?.insertAdjacentHTML('beforeend', createTasksMarkUp(taskList));
 
     const buttons = document.querySelectorAll('.btn') as NodeListOf<HTMLButtonElement>;
-    pageHandler(buttons);
 
     Array.from(buttons).forEach(button => {
         button.disabled = true;
     });
 
-    const table = document.querySelector('.table') as HTMLTableElement;
-    const rows: HTMLCollectionOf<HTMLTableRowElement> = table.rows;
-
-    for (let i = 1; i < rows.length; i++) {
-        rows[i].children.item(0)!.textContent = String(i);
-    }
+    updateNumeration();
+    pageHandler(buttons);
 }
 
 const evokeHandler = () => {
-    const buttonSave = document.querySelector('.btn-primary') as HTMLButtonElement;
+    const buttonSave = document.querySelector('.btn-save') as HTMLButtonElement;
     const buttonClear = document.querySelector('.btn-warning') as HTMLButtonElement;
     const input = document.querySelector('.form-control') as HTMLInputElement;
     saveButtonHandler(buttonSave, input);
@@ -44,14 +40,9 @@ const evokeHandler = () => {
 }
 
 export const pageHandler = (buttons: NodeListOf<HTMLButtonElement>) => {
-    window.addEventListener('load', () => {
-        Array.from(buttons).forEach(button => {
-            button.disabled = false;
-            evokeHandler();
-        });
+    Array.from(buttons).forEach(button => {
+        button.disabled = false;
     });
-
-    //TODO check if it sets disabled
 }
 
 export const clearButtonHandler = (buttonClear: HTMLButtonElement, buttonSave: HTMLButtonElement, input: HTMLInputElement) => {
@@ -63,3 +54,11 @@ export const clearButtonHandler = (buttonClear: HTMLButtonElement, buttonSave: H
     })
 }
 
+export const updateNumeration = () => {
+    const table = document.querySelector('.table') as HTMLTableElement;
+    const rows: HTMLCollectionOf<HTMLTableRowElement> = table.rows;
+
+    for (let i = 1; i < rows.length; i++) {
+        rows[i].children.item(0)!.textContent = String(i);
+    }
+}
