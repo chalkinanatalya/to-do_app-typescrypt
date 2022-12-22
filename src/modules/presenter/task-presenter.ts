@@ -1,6 +1,6 @@
 import { nanoid } from "../../../node_modules/nanoid/index";
 import { TaskInterface } from "../create-task";
-import { addTask, changeTask, completeTask, removeTask } from "../model/task-model";
+import { addTask, changeTask, completeTask, getTaskList, removeTask } from "../model/task-model";
 import { createTaskMarkUp } from "../view/task-view";
 import { renderTasksList, updateNumeration } from './app-presenter';
 
@@ -17,11 +17,30 @@ const removeTableString = (cell: HTMLElement): void => {
     cell.parentElement?.remove();
 }
 
-const modifyTableString = (cell: HTMLElement): void => {
-    cell.parentElement?.classList.remove('table-light');
-    cell.parentElement?.classList.add('table-success');
-    cell.parentElement?.children?.item(1)?.classList.add('text-decoration-line-through');
+const modifyTableString = (cell: HTMLElement, status: string): void => {
+    let removeBackground;
+    let addBackground;
+    let buttonContent;
+    if (status === 'Завершён') {
+        removeBackground = 'table-light';
+        addBackground = 'table-success';
+        buttonContent = "Отменить";
+        cell.parentElement?.children?.item(1)?.classList.add('text-decoration-line-through');
+    } else {
+        removeBackground = 'table-success';
+        addBackground = 'table-light';
+        buttonContent = "Завершить";
+        cell.parentElement?.children?.item(1)?.classList.remove('text-decoration-line-through');
+    }
+    cell.parentElement?.classList.remove(removeBackground);
+    cell.parentElement?.classList.add(addBackground);
+
+    let tr = document.querySelector(`#${cell.id}`)?.parentElement;
+    tr!.children[2].textContent = status;
+
+    cell.children[1].textContent = buttonContent;
 }
+
 
 export const checkInput = (buttonSave: HTMLButtonElement, input: HTMLInputElement): void => {
     if (input.value === '') {
@@ -89,16 +108,18 @@ export const completeButtonHandler = () => {
         button.addEventListener('click', (e) => {
             e.preventDefault();
             const target = e.target as HTMLButtonElement;
+            const taskList = getTaskList();
+            const currentId = target.parentElement?.id;
+            const currentTask = taskList.find(task => task.id === currentId);
+            const taskStatus = currentTask?.status === 'Завершён' ? 'В процессе' : 'Завершён';
 
             if (target.parentElement) {
                 const completedTask: TaskInterface = {
-                    id: target.parentElement.id,
-                    status: 'Завершён'
+                    id: currentId,
+                    status: taskStatus
                 }
                 changeTask(completeTask, completedTask);
-                modifyTableString(target.parentElement);
-                let tr = document.querySelector(`#${target.parentElement.id}`)?.parentElement;
-                tr!.children[2].textContent = 'Завершён';
+                modifyTableString(target.parentElement, taskStatus);
             }
         })
     );
