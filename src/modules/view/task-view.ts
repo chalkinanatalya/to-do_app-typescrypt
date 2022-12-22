@@ -1,9 +1,9 @@
 import { TaskInterface } from "../create-task";
 
 export const createTaskMarkUp = ({ id, taskText, status }: TaskInterface): string => (
-  `<tr class="${status === 'completed' ? 'table-success' : 'table-light'}">
+  `<tr class="${status === 'Завершён' ? 'table-success' : 'table-light'}">
     <td>''</td>
-    <td class="${status === 'completed' ? 'text-decoration-line-through' : ''}">
+    <td class="${status === 'Завершён' ? 'text-decoration-line-through' : ''}">
       ${taskText}
     </td>
     <td>${status}</td>
@@ -12,7 +12,7 @@ export const createTaskMarkUp = ({ id, taskText, status }: TaskInterface): strin
         Удалить
       </button>
       <button class="btn btn-success">
-        Завершить
+      ${status === 'Завершён' ? 'Отменить' : 'Завершить'}
       </button>
     </td>
   </tr>`

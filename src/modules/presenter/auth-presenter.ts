@@ -11,7 +11,6 @@ export const renderAuth = () => {
     buttonEnter.disabled = true;
 
     stateHandler(buttonEnter, input);
-
     enterButtonHandler(buttonEnter, input);
 }
 
@@ -33,5 +32,18 @@ const enterButtonHandler = (buttonEnter: HTMLButtonElement, input: HTMLInputElem
         setStorage(input.value);
         renderApp();
         removeAuth();
+    })
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            checkInput(buttonEnter, input);
+
+            if (buttonEnter.disabled) {
+                return;
+            }
+
+            setStorage(input.value);
+            renderApp();
+            removeAuth();
+        }
     })
 }
